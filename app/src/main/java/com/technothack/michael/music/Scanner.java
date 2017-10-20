@@ -12,7 +12,8 @@ import java.util.List;
 public class Scanner {
     private Deque<File> queue = new ArrayDeque<>();
     private List<String> absolutePaths = new ArrayList<>();
-    private File root = Environment.getDataDirectory();
+    // root must be changed (not all files are found)
+    private File root = Environment.getExternalStorageDirectory();
     private String mask;
 
     public Scanner(String mask) {
