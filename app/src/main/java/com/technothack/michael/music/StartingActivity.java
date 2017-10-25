@@ -16,67 +16,53 @@ import java.util.List;
 public class StartingActivity extends AppCompatActivity {
 
     ProgressBar _initprgs;
-    Thread _load;
-    private Scanner mp3Scanner= new Scanner(".mp3");
+    boolean loader_start = false;
+    private final String save_loader_name = "loader_start";
+    private Scanner mp3Scanner = new Scanner(".mp3");
     private List<String> absolutePaths = new ArrayList<>();
-    TelegramClient client;
-    TdApi.TLObject result;
+//    TelegramClient client;
+//    TdApi.TLObject result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-        client = new TelegramClient(this.getApplicationContext(), new Client.ResultHandler() {
-            @Override
-            public void onResult(TdApi.TLObject object) {
-
-            }
-        });
-        client.getAuthState(new Client.ResultHandler() {
-            @Override
-            public void onResult(TdApi.TLObject object) {
-                result = object;
-            }
-        });
-        if (result.getConstructor() != new TdApi.AuthStateOk().getConstructor()) {
-            Intent intent = new Intent(StartingActivity.this, AuthActivity.class);
-            startActivity(intent);
-            StartingActivity.this.finish();  // вроде в этом случае для неавторизованных пользователей загрузка не начнется
-        }
-
-        _initprgs = (ProgressBar)findViewById(R.id.progressBar);
-        _load = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadData();
-            }
-        });
-        //loadData();
-        //_load.start();
-        new Loader(_initprgs).execute();
-    }
-
-    // this func run in additional thread, load some data and update progress bar
-    private void loadData(){
-        //_initprgs.setMin(0);
-        //_initprgs.setMax(100);
-        for (int i = 0; i < _initprgs.getMax(); i++){
-            _initprgs.setProgress(i);
-//            try {
-//                //Thread.currentThread().sleep(10);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
+//        client = new TelegramClient(this.getApplicationContext(), new Client.ResultHandler() {
+//            @Override
+//            public void onResult(TdApi.TLObject object) {
+//
 //            }
-        }
+//        });
+//        client.getAuthState(new Client.ResultHandler() {
+//            @Override
+//            public void onResult(TdApi.TLObject object) {
+//                result = object;
+//            }
+//        });
+//        if (result.getConstructor() != new TdApi.AuthStateOk().getConstructor()) {
+//            Intent intent = new Intent(StartingActivity.this, AuthActivity.class);
+//            startActivity(intent);
+//            StartingActivity.this.finish();  // вроде в этом случае для неавторизованных пользователей загрузка не начнется
+//        }
 
-        Intent intent = new Intent(this, ListActivity.class);
-        startActivity(intent);
+        if (loader_start == false) {
+            _initprgs = (ProgressBar) findViewById(R.id.progressBar);
+            new Loader(_initprgs).execute();
+            loader_start = true;
+        }
     }
 
-    // this func run in additional thread, and scan for initial music
-    private void scanData(){
+    protected void onSaveInstanceState(Bundle state){
+        super.onSaveInstanceState(state);
 
+        state.putBoolean(save_loader_name, loader_start);
+    }
+
+    protected void onRestoreInstanceState(Bundle state){
+        super.onRestoreInstanceState(state);
+
+        loader_start = state.getBoolean(save_loader_name);
     }
 
     static private String getShortName(String fullName) {
@@ -112,7 +98,13 @@ public class StartingActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Void... unused) {
             // Need to rewrite
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
             progressBar.setProgress(50);
+//                }
+//            });
+
         }
 
         @Override

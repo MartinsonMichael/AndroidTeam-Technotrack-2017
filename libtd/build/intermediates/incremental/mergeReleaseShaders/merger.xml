@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/egorov/AndroidStudioProjects/AndroidTeam-Technotrack-2017/libtd/src/main/shaders"/></dataSet><dataSet config="release"><source path="/home/egorov/AndroidStudioProjects/AndroidTeam-Technotrack-2017/libtd/src/release/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/data/Code/Java_Android/Music/libtd/src/main/shaders"/></dataSet><dataSet config="release"><source path="/data/Code/Java_Android/Music/libtd/src/release/shaders"/></dataSet></merger>
