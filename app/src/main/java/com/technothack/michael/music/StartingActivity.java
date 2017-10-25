@@ -31,7 +31,7 @@ public class StartingActivity extends AppCompatActivity {
         //_initprgs.setMin(0);
         //_initprgs.setMax(100);
         for (int i = 0; i < _initprgs.getMax(); i++){
-
+            _initprgs.setProgress(i);
 //            try {
 //                //Thread.currentThread().sleep(10);
 //            } catch (InterruptedException e) {
