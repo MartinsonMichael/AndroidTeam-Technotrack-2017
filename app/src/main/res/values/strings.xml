@@ -5,4 +5,8 @@
     <string name="title_cur_list">Playlist</string>
     <string name="title_cur_track">Track</string>
     <string name="title_chat">Creater</string>
+    <string name="input_phone_number">Введите номер телефона</string>
+    <string name="input_code">Введите код</string>
+    <string name="send_auth">Отправить</string>
+    <string name="title_auth_activity">AuthActivity</string>
 </resources>
