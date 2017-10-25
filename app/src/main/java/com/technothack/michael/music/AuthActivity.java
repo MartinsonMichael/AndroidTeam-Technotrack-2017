@@ -23,7 +23,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_auth);
         client = new TelegramClient(this.getApplicationContext(), new Client.ResultHandler() {
             @Override
             public void onResult(TdApi.TLObject object) {
@@ -41,25 +41,28 @@ public class AuthActivity extends AppCompatActivity {
         send_auth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (step == 0 && phoneNumber.getText() != null) {
+                if (step == 0 && phoneNumber.getText().toString().length() != 0) {
                     client.sendPhone(phoneNumber.getText().toString(), new Client.ResultHandler() {
                         @Override
                         public void onResult(TdApi.TLObject object) {
                             text_auth.setText(object.toString());
-                            step++; // это нужно делать только в случае если не возникло ошибки
                         }
                     });
+                    step = 1; // это нужно делать только в случае если не возникло ошибки
+                    code.setVisibility(View.VISIBLE);
                 }
-                if (step == 1 && code.getText() != null) {
+                if (step == 1 && code.getText().toString().length() != 0) {
                     // все что написано дальше должно выполняться только в случае успешной авторизации
                     client.checkCode(code.getText().toString(), "", "", new Client.ResultHandler() {
                         @Override
                         public void onResult(TdApi.TLObject object) {
-                            Intent intent = new Intent(AuthActivity.this, StartingActivity.class);
-                            startActivity(intent);
-                            AuthActivity.this.finish();
+                            text_auth.setText(object.toString());
                         }
                     });
+                    //в случае успешной авторизации
+                    Intent intent = new Intent(AuthActivity.this, StartingActivity.class);
+                    startActivity(intent);
+                    AuthActivity.this.finish();
                 }
             }
         });

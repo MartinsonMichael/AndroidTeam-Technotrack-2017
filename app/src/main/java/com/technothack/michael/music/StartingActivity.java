@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.drinkless.td.libcore.telegram.Client;
+import org.drinkless.td.libcore.telegram.TdApi;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +19,31 @@ public class StartingActivity extends AppCompatActivity {
     Thread _load;
     private Scanner mp3Scanner= new Scanner(".mp3");
     private List<String> absolutePaths = new ArrayList<>();
+    TelegramClient client;
+    TdApi.TLObject result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
+
+        client = new TelegramClient(this.getApplicationContext(), new Client.ResultHandler() {
+            @Override
+            public void onResult(TdApi.TLObject object) {
+
+            }
+        });
+        client.getAuthState(new Client.ResultHandler() {
+            @Override
+            public void onResult(TdApi.TLObject object) {
+                result = object;
+            }
+        });
+        if (result.getConstructor() != new TdApi.AuthStateOk().getConstructor()) {
+            Intent intent = new Intent(StartingActivity.this, AuthActivity.class);
+            startActivity(intent);
+            StartingActivity.this.finish();  // вроде в этом случае для неавторизованных пользователей загрузка не начнется
+        }
 
         _initprgs = (ProgressBar)findViewById(R.id.progressBar);
         _load = new Thread(new Runnable() {
