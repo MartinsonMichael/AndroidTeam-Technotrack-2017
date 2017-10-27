@@ -97,14 +97,7 @@ public class StartingActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Void... unused) {
-            // Need to rewrite
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
             progressBar.setProgress(50);
-//                }
-//            });
-
         }
 
         @Override
