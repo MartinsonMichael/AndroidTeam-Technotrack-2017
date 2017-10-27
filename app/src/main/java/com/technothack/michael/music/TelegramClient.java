@@ -9,12 +9,43 @@ import org.drinkless.td.libcore.telegram.TdApi;
 
 public class TelegramClient {
     private final Client client;
+    private static volatile TelegramClient instance;
+
+    public TelegramClient() {
+        client = TG.getClientInstance();
+    }
 
     public TelegramClient(Context context, Client.ResultHandler updatesHandler) {
         TG.setDir(context.getCacheDir().getAbsolutePath());
         TG.setFilesDir(context.getFilesDir().getAbsolutePath());
         client = TG.getClientInstance();
         TG.setUpdatesHandler(updatesHandler);
+    }
+
+    public static TelegramClient getInstance() {
+        TelegramClient localInstance = instance;
+        if (localInstance == null) {
+            synchronized (TelegramClient.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new TelegramClient();
+                }
+            }
+        }
+        return localInstance;
+    }
+
+    public static TelegramClient getInstance(Context context, Client.ResultHandler updatesHandler) {
+        TelegramClient localInstance = instance;
+        if (localInstance == null) {
+            synchronized (TelegramClient.class) {
+                localInstance = instance;
+                if (localInstance == null) {
+                    instance = localInstance = new TelegramClient(context, updatesHandler);
+                }
+            }
+        }
+        return localInstance;
     }
 
     public void clearAuth(Client.ResultHandler resultHandler) {

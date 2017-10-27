@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="phone"
-        android:text="@string/input_phone_number" />
+        android:hint="@string/input_phone_number" />
 
     <EditText
         android:id="@+id/code"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/input_code"
+        android:hint="@string/input_code"
         android:visibility="invisible" />
 
     <Button

@@ -12,6 +12,8 @@ import org.drinkless.td.libcore.telegram.TdApi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartingActivity extends AppCompatActivity {
 
@@ -20,36 +22,44 @@ public class StartingActivity extends AppCompatActivity {
     private final String save_loader_name = "loader_start";
     private Scanner mp3Scanner = new Scanner(".mp3");
     private List<String> absolutePaths = new ArrayList<>();
-//    TelegramClient client;
-//    TdApi.TLObject result;
+    TelegramClient client;
+    private TdApi.TLObject result = new TdApi.AuthStateWaitPhoneNumber();
+    private Semaphore semaphore = new Semaphore(0);
+    private Client.ResultHandler resultHandler = new Client.ResultHandler() {
+        @Override
+        public void onResult(TdApi.TLObject object) {
+            result = object;
+            semaphore.release();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-//        client = new TelegramClient(this.getApplicationContext(), new Client.ResultHandler() {
-//            @Override
-//            public void onResult(TdApi.TLObject object) {
-//
-//            }
-//        });
-//        client.getAuthState(new Client.ResultHandler() {
-//            @Override
-//            public void onResult(TdApi.TLObject object) {
-//                result = object;
-//            }
-//        });
-//        if (result.getConstructor() != new TdApi.AuthStateOk().getConstructor()) {
-//            Intent intent = new Intent(StartingActivity.this, AuthActivity.class);
-//            startActivity(intent);
-//            StartingActivity.this.finish();  // вроде в этом случае для неавторизованных пользователей загрузка не начнется
-//        }
+        client = TelegramClient.getInstance(this.getApplicationContext(), new Client.ResultHandler() {
+            @Override
+            public void onResult(TdApi.TLObject object) {
 
-        if (loader_start == false) {
-            _initprgs = (ProgressBar) findViewById(R.id.progressBar);
-            new Loader(_initprgs).execute();
-            loader_start = true;
+            }
+        });
+        client.getAuthState(resultHandler);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (result.getConstructor() != 1222968966) { //authStateOk
+            Intent intent = new Intent(StartingActivity.this, AuthActivity.class);
+            startActivity(intent);
+            StartingActivity.this.finish();  // вроде в этом случае для неавторизованных пользователей загрузка не начнется
+        } else {
+            if (loader_start == false) {
+                _initprgs = (ProgressBar) findViewById(R.id.progressBar);
+                new Loader(_initprgs).execute();
+                loader_start = true;
+            }
         }
     }
 

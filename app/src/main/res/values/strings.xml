@@ -9,4 +9,5 @@
     <string name="input_code">Введите код</string>
     <string name="send_auth">Отправить</string>
     <string name="title_auth_activity">AuthActivity</string>
+    <string name="network_state_0">Нет доступа к интернету</string>
 </resources>
