@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.technothack.michael.music.list_fragment.OnListFragmentInteractionListener;
+import com.technothack.michael.music.MainFragmentList.OnListFragmentInteractionListener;
 import com.technothack.michael.music.dummy.DummyContent.DummyItem;
 
 import java.util.List;

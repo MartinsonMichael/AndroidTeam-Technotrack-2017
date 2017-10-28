@@ -34,7 +34,7 @@
         android:background="?android:attr/windowBackground"
         app:menu="@menu/navigation" />
 
-    <fragment android:name="com.technothack.michael.music.list_fragment"
+    <fragment android:name="com.technothack.michael.music.MainFragmentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         ></fragment>

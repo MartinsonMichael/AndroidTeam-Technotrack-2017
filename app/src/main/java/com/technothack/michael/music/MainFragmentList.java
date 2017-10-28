@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import com.technothack.michael.music.dummy.DummyContent;
 import com.technothack.michael.music.dummy.DummyContent.DummyItem;
 
-import java.util.List;
 
-
-public class list_fragment extends Fragment {
+public class MainFragmentList extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -28,13 +26,13 @@ public class list_fragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public list_fragment() {
+    public MainFragmentList() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static list_fragment newInstance(int columnCount) {
-        list_fragment fragment = new list_fragment();
+    public static MainFragmentList newInstance(int columnCount) {
+        MainFragmentList fragment = new MainFragmentList();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);

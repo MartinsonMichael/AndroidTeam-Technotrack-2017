@@ -1,11 +1,9 @@
 package com.technothack.michael.music;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,10 +23,11 @@ public class ListActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_cur_list:
-                    //ft.add()
-                    //Intent intent = new Intent(ListActivity.class, list_fragment.class);
-                    //startActivity(intent);
-                    //mTextMessage.setText(R.string.title_cur_list);
+
+                    //MainFragmentList list = new MainFragmentList();
+                    //ft.replace(0, (android.app.Fragment)list);
+                    //ft.commit();
+
                     return true;
                 case R.id.navigation_cur_track:
                     mTextMessage.setText(R.string.title_cur_track);
