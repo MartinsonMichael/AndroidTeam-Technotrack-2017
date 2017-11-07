@@ -70,12 +70,19 @@ public class AuthActivity extends AppCompatActivity {
                         client.sendPhone(phoneNumber.getText().toString(), new Client.ResultHandler() {
                             @Override
                             public void onResult(TdApi.TLObject object) {
-                                text_auth.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        text_auth.setText(object.toString());
-                                    }
-                                });
+                                result = object;
+                                semaphore.release();
+                            }
+                        });
+                        try {
+                            semaphore.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        text_auth.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                text_auth.setText(result.toString());
                             }
                         });
                         client.getAuthState(resultHandler);
@@ -93,12 +100,19 @@ public class AuthActivity extends AppCompatActivity {
                         client.checkCode(code.getText().toString(), "", "", new Client.ResultHandler() {
                             @Override
                             public void onResult(TdApi.TLObject object) {
-                                text_auth.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        text_auth.setText(object.toString());
-                                    }
-                                });
+                                result = object;
+                                semaphore.release();
+                            }
+                        });
+                        try {
+                            semaphore.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        text_auth.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                text_auth.setText(result.toString());
                             }
                         });
                         //в случае успешной авторизации
