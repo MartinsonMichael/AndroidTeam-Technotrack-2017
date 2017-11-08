@@ -42,4 +42,7 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'
     testCompile 'junit:junit:4.12'
+
+    // https://mvnrepository.com/artifact/com.mpatric/mp3agic
+    compile group: 'com.mpatric', name: 'mp3agic', version: '0.9.0'
 }

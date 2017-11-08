@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.technothack.michael.music.MainFragmentList.OnListFragmentInteractionListener;
 import com.technothack.michael.music.dummy.DummyContent.DummyItem;

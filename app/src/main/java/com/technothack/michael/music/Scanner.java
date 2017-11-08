@@ -10,18 +10,19 @@ import java.util.Deque;
 import java.util.List;
 
 public class Scanner {
-    private Deque<File> queue = new ArrayDeque<>();
     private List<String> absolutePaths = new ArrayList<>();
     // root must be changed (not all files are found)
-    private File root = Environment.getExternalStorageDirectory();
+    private static File root = Environment.getExternalStorageDirectory();
+    //private File root = Environment.getRootDirectory();
     private String mask;
 
     public Scanner(String mask) {
         this.mask = mask;
-        Collections.addAll(queue, root.listFiles());
     }
 
     public void run() {
+        Deque<File> queue = new ArrayDeque<>();
+        Collections.addAll(queue, root.listFiles());
         while (!queue.isEmpty()) {
             File currentFile = queue.remove();
             if (currentFile.isDirectory()) {

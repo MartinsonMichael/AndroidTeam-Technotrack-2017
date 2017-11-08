@@ -1,9 +1,12 @@
 package com.technothack.michael.music.dummy;
 
+import com.technothack.michael.music.MusicHolder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -23,7 +26,8 @@ public class DummyContent {
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 25;
+    //private static final int COUNT = 25;
+    private static int COUNT = 5;
 
     static {
         // Add some sample items.
@@ -38,7 +42,9 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new DummyItem(String.valueOf(position),
+                "Item " + MusicHolder.getMe().mp3Scanner.getAbsolutePaths().get(position),
+                makeDetails(position));
     }
 
     private static String makeDetails(int position) {

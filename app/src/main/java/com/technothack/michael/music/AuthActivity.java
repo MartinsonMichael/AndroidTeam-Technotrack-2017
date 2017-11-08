@@ -124,6 +124,8 @@ public class AuthActivity extends AppCompatActivity {
                         }
                         if (result.getConstructor() == 1222968966) { //authStateOk
                             Intent intent = new Intent(AuthActivity.this, StartingActivity.class);
+                            intent.putExtra(StartingActivity.save_author_name, true);
+                            intent.putExtra(StartingActivity.save_loader_name, false);
                             startActivity(intent);
                             AuthActivity.this.finish();
                         }
