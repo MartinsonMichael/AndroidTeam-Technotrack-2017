@@ -31,6 +31,8 @@ public class DummyContent {
 
     static {
         // Add some sample items.
+        //COUNT = MusicHolder.getMe().getTracksInfo().size();
+        COUNT = 5;
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
@@ -43,7 +45,7 @@ public class DummyContent {
 
     private static DummyItem createDummyItem(int position) {
         return new DummyItem(String.valueOf(position),
-                "Item " + MusicHolder.getMe().mp3Scanner.getAbsolutePaths().get(position),
+                "" + MusicHolder.getMe().getTrackInfo(position).getTrack(),
                 makeDetails(position));
     }
 
