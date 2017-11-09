@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import org.drinkless.td.libcore.telegram.Client;
 import org.drinkless.td.libcore.telegram.TdApi;
-
 import java.util.concurrent.Semaphore;
+
 
 public class StartingActivity extends AppCompatActivity {
 
@@ -165,6 +165,5 @@ public class StartingActivity extends AppCompatActivity {
         loader_start = state.getBoolean(save_loader_name);
         author_start = state.getBoolean(save_author_name);
     }
-
 
 }
