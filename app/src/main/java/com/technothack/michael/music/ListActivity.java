@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import com.technothack.michael.music.dummy.DummyContent;
 
-public class ListActivity extends AppCompatActivity implements MainFragmentList.OnListFragmentInteractionListener{
+public class ListActivity extends AppCompatActivity implements
+        com.technothack.michael.music.MainFragmentList.OnListFragmentInteractionListener,
+        HomeFragmentList.OnListFragmentInteractionListener,
+        ChatFragmentList.OnListFragmentInteractionListener {
 
     private TextView mTextMessage;
     final static  String TAG_HOME = "HOME";
@@ -19,10 +22,10 @@ public class ListActivity extends AppCompatActivity implements MainFragmentList.
     final static  String TAG_TRACK = "TRACK";
     final static  String TAG_CREATER = "CREATER";
     FragmentManager myFragmentManager = getSupportFragmentManager();
-    MainFragmentList fragmentListHome;
+    HomeFragmentList fragmentListHome;
     MainFragmentList fragmentListPlayList;
     MainFragmentList fragmentListTrack;
-    MainFragmentList fragmentListCreater;
+    ChatFragmentList fragmentListCreater;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -79,8 +82,8 @@ public class ListActivity extends AppCompatActivity implements MainFragmentList.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         mTextMessage = (TextView) findViewById(R.id.message);
-        fragmentListCreater = MainFragmentList.newInstance(1);
-        fragmentListHome = MainFragmentList.newInstance(1);
+        fragmentListCreater = ChatFragmentList.newInstance(1);
+        fragmentListHome = HomeFragmentList.newInstance(1);
         fragmentListPlayList = MainFragmentList.newInstance(1);
         fragmentListTrack = MainFragmentList.newInstance(1);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -95,6 +98,11 @@ public class ListActivity extends AppCompatActivity implements MainFragmentList.
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(ChatHistory.ChatMessage item) {
 
     }
 }
