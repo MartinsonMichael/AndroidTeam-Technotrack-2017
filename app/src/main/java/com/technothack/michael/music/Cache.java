@@ -9,20 +9,14 @@ public class Cache {
     public static int casheSize = 4 * 1024;
 
     private Cache() {
-
         lru = new LruCache<Object, Object>(casheSize);
-
     }
 
     public static Cache getInstance() {
-
         if (instance == null) {
-
             instance = new Cache();
         }
-
         return instance;
-
     }
 
     public LruCache<Object, Object> getLru() {
