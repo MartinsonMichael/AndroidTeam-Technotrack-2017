@@ -18,6 +18,11 @@ public class ChatHistory {
         this.itemMap.put(item.id, item);
     }
 
+    public void addItem(int position, ChatMessage item) {
+        this.items.add(position, item);
+        this.itemMap.put(item.id, item);
+    }
+
     private String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
         builder.append("Details about Item: ").append(position);

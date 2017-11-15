@@ -23,12 +23,12 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:hint="@string/send_msg_to_bot" />
 
     <Button
         android:id="@+id/sendToBot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="@string/send_auth" />
 
 </LinearLayout>

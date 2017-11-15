@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.technothack.michael.music.dummy.DummyContent;
@@ -31,12 +32,18 @@ public class ChatFragmentList extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    TelegramClient client;
     private OnListFragmentInteractionListener mListener;
     private ChatHistory chatHistory;
     private ChatMessageRecyclerViewAdapter adapter;
     private Button button;
+    private EditText editText;
     private int counter;
     private Semaphore semaphore = new Semaphore(0);
+    private RecyclerView recyclerView;
+    private long chatId;
+    private String botname = "vkmusic_bot";
+    private int lastIncomingMessageId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,39 +76,81 @@ public class ChatFragmentList extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.chat_list);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
         chatHistory = new ChatHistory();
-        String username = "dihtmipt";
-        TdApi.SearchPublicChat searchPublicChat=new TdApi.SearchPublicChat(username);
+        client = TelegramClient.getInstance();
+        TdApi.SearchPublicChat searchPublicChat=new TdApi.SearchPublicChat(botname);
         TG.getClientInstance().send(searchPublicChat, new Client.ResultHandler() {
             @Override
             public void onResult(TdApi.TLObject object) {
-                TdApi.Chat chat = (TdApi.Chat) object;
-                TdApi.Message topMessage = chat.topMessage;
+                if (object instanceof  TdApi.Error) {
+                    FragmentManager manager = getFragmentManager();
+                    MyAlertDialogFragment myDialogFragment = new MyAlertDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ARG_MSG, object.toString());
+                    myDialogFragment.setArguments(bundle);
+                    myDialogFragment.show(manager, "dialog");
+                } else {
+                    TdApi.Chat chat = (TdApi.Chat) object;
+                    TdApi.Message topMessage = chat.topMessage;
 
-                long chatId = chat.id;
+                    chatId = chat.id;
+                    if (topMessage == null) {
+                        client.startChatWithBot((int) chatId, chatId, new Client.ResultHandler() {
+                            @Override
+                            public void onResult(TdApi.TLObject object) {
+                                semaphore.release();
+                            }
+                        });
+                        try {
+                            semaphore.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        client.getChat(chatId, new Client.ResultHandler() {
+                            @Override
+                            public void onResult(TdApi.TLObject object) {
+                                TdApi.Chat chat = (TdApi.Chat) object;
+                                TdApi.Message topMessage = chat.topMessage;
+                                lastIncomingMessageId = topMessage.id;
+                                semaphore.release();
+                            }
+                        });
+                        try {
+                            semaphore.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        lastIncomingMessageId = topMessage.id;
+                    }
 
-                TdApi.GetChatHistory getChatHistory = new TdApi.GetChatHistory(chatId, topMessage.id, 0, 15);
-                TG.getClientInstance().send(getChatHistory, new Client.ResultHandler() {
-                    @Override
-                    public void onResult(TdApi.TLObject object) {
-                        TdApi.Messages messages = (TdApi.Messages) object;
-                        for (TdApi.Message message: messages.messages) {
-                            if (message.content instanceof TdApi.MessageText) {
+                    TdApi.GetChatHistory getChatHistory = new TdApi.GetChatHistory(chatId, lastIncomingMessageId, 0, 15);
+                    TG.getClientInstance().send(getChatHistory, new Client.ResultHandler() {
+                        @Override
+                        public void onResult(TdApi.TLObject object) {
+                            TdApi.Messages messages = (TdApi.Messages) object;
+                            for (TdApi.Message message : messages.messages) {
+                                /*if (message.content instanceof TdApi.MessageText) {
+                                    chatHistory.addItem(new ChatHistory.ChatMessage(
+                                            Integer.valueOf(message.id).toString(),
+                                            ((TdApi.MessageText) message.content).text,
+                                            ""));
+                                }*/
                                 chatHistory.addItem(new ChatHistory.ChatMessage(
                                         Integer.valueOf(message.id).toString(),
-                                        ((TdApi.MessageText) message.content).text,
+                                        message.content.toString(),
                                         ""));
                             }
+                            semaphore.release();
                         }
-                        semaphore.release();
-                    }
-                });
+                    });
+                }
             }
         });
         try {
@@ -111,13 +160,51 @@ public class ChatFragmentList extends Fragment {
         }
         adapter = new ChatMessageRecyclerViewAdapter(chatHistory, mListener);
         recyclerView.setAdapter(adapter);
+        editText = view.findViewById(R.id.textForBot);
         button = view.findViewById(R.id.sendToBot);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counter++;
-                chatHistory.addItem(new ChatHistory.ChatMessage(Integer.valueOf(counter).toString(), "Новое сообщение", ""));
-                adapter.notifyItemInserted(chatHistory.items.size()-1);
+                if (editText.getText().toString().length() != 0) {
+                    /*counter++;
+                    chatHistory.addItem(0, new ChatHistory.ChatMessage(Integer.valueOf(counter).toString(), "Новое сообщение", ""));
+                    adapter.notifyItemInserted(0);
+                    recyclerView.smoothScrollToPosition(0);*/
+
+                    client.sendMessage(chatId, editText.getText().toString(), new Client.ResultHandler() {
+                        @Override
+                        public void onResult(TdApi.TLObject object) {
+                            semaphore.release();
+                        }
+                    });
+                    try {
+                        semaphore.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    client.getLastIncomingMessage(chatId, lastIncomingMessageId, new Client.ResultHandler() {
+                        @Override
+                        public void onResult(TdApi.TLObject object) {
+                            TdApi.Message message = (TdApi.Message) object;
+                            chatHistory.addItem(0, new ChatHistory.ChatMessage(
+                                    Integer.valueOf(message.id).toString(),
+                                    message.content.toString(),
+                                    ""));
+                            semaphore.release();
+                        }
+                    });
+                    try {
+                        semaphore.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    adapter.notifyItemInserted(0);
+                    recyclerView.smoothScrollToPosition(0);
+                    editText.setText(null);
+                }
+
+
+
                 /*FragmentManager manager = getFragmentManager();
                 MyAlertDialogFragment myDialogFragment = new MyAlertDialogFragment();
                 Bundle bundle = new Bundle();

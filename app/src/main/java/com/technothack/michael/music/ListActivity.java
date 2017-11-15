@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.technothack.michael.music.dummy.DummyContent;
 
@@ -98,7 +99,7 @@ public class ListActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
+        Toast.makeText(getApplicationContext(), item.content, Toast.LENGTH_SHORT).show();
     }
 
     @Override

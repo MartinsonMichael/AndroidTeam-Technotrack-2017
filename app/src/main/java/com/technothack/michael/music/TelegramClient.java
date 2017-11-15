@@ -76,17 +76,17 @@ public class TelegramClient {
         client.send(request, resultHandler);
     }
 
-    public void getLastIncomingMessage(long chatId, int fromMessageId, int userId, Client.ResultHandler resultHandler) {
+    public void getLastIncomingMessage(long chatId, int fromMessageId, Client.ResultHandler resultHandler) {
         getChat(chatId, chatObj -> {
             if (chatObj instanceof TdApi.Chat) {
-                TdApi.GetChatHistory getChatHistory = new TdApi.GetChatHistory(chatId, fromMessageId, -1, 2);
+                TdApi.GetChatHistory getChatHistory = new TdApi.GetChatHistory(chatId, fromMessageId, -1, 5);
                 client.send(getChatHistory, messagesObj -> {
                     if (messagesObj instanceof TdApi.Messages) {
                         TdApi.Messages messages = (TdApi.Messages) messagesObj;
                         if (messages.totalCount > 0) {
                             for (TdApi.Message message : messages.messages) {
 
-                                if (message.id != fromMessageId && message.senderUserId != userId) {
+                                if (message.id != fromMessageId) {
                                     resultHandler.onResult(message);
                                     return;
                                 }

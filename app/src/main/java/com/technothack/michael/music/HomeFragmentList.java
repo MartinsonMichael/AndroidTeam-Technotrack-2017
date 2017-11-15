@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.technothack.michael.music.dummy.DummyContent;
 
@@ -45,7 +46,6 @@ public class HomeFragmentList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -105,10 +105,12 @@ public class HomeFragmentList extends Fragment {
 
     public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
+        private final Cache mCache;
         private final List<DummyContent.DummyItem> mValues;
         private final OnListFragmentInteractionListener mListener;
 
         public MyItemRecyclerViewAdapter(List<DummyContent.DummyItem> items, OnListFragmentInteractionListener listener) {
+            mCache = Cache.getInstance();
             mValues = items;
             mListener = listener;
         }
@@ -136,6 +138,27 @@ public class HomeFragmentList extends Fragment {
                     }
                 }
             });
+        }
+
+        private String getContent(int position) {
+            String id = mValues.get(position).id;
+            String content = getContentFromMemCache(id);
+            if (content == null) {
+                content = mValues.get(position).content;
+                addContentToMemoryCache(id, content);
+            }
+            return content;
+
+        }
+
+        private void addContentToMemoryCache(String id, String content) {
+            if (getContentFromMemCache("music" + id) == null) {
+                mCache.getLru().put("music" + id, content);
+            }
+        }
+
+        private String getContentFromMemCache(String id) {
+            return (String) mCache.getLru().get("music" + id);
         }
 
         @Override
